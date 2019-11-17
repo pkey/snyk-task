@@ -14,7 +14,8 @@ class App extends React.Component {
       version: "",
       depth: 0,
       treeData: undefined,
-      loading: false
+      loading: false,
+      message: "Try it out!"
     };
   }
   render() {
@@ -36,7 +37,10 @@ class App extends React.Component {
           </Button>
         </div>
 
-        <DependencyTree treeData={this.state.treeData} />
+        <DependencyTree
+          treeData={this.state.treeData}
+          message={this.state.message}
+        />
       </div>
     );
   }
@@ -61,7 +65,8 @@ class App extends React.Component {
 
   onClick = () => {
     this.setState({
-      loading: true
+      loading: true,
+      message: ""
     });
     axios
       .get(
@@ -74,7 +79,8 @@ class App extends React.Component {
       })
       .catch(error => {
         this.setState({
-          treeData: undefined
+          treeData: undefined,
+          message: error.response.data
         });
       })
       .finally(() => {
