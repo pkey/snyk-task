@@ -1,4 +1,5 @@
 import axios from "axios";
+import semver from "semver";
 import { Dependency } from "../models";
 
 class DependencyService {
@@ -13,15 +14,18 @@ class DependencyService {
 
   async getTree(name, version, currentDepth) {
     const dependency: Dependency = {
-      name: name,
-      version: version,
+      name,
+      version,
       dependencies: []
     };
 
-    if (currentDepth === this.maxDepth) return dependency;
+    if (currentDepth >= this.maxDepth) return dependency;
+
+    const parsedVersion =
+      version === "latest" ? version : this.parseVersion(version);
 
     const response = await axios.get(
-      `https://registry.npmjs.org/${name}/${version}`
+      `https://registry.npmjs.org/${name}/${parsedVersion}`
     );
 
     const dependencies = {
@@ -42,6 +46,19 @@ class DependencyService {
     });
 
     return dependency;
+  }
+
+  parseVersion(rawVersion) {
+    let parsedVersion;
+    try {
+      parsedVersion = semver.minVersion(rawVersion);
+    } catch {
+      parsedVersion = semver.minVersion(
+        semver.clean(rawVersion, { loose: true })
+      );
+    }
+
+    return parsedVersion.version;
   }
 }
 

@@ -25,6 +25,17 @@ describe("DependencyService", () => {
     });
   });
 
+  //Would be better to check what argument axios was called with. Not sure how to test this.
+  it("should parse the version before calling axios", async () => {
+    expect(
+      await new dependencyService().getDependencies("dep", "~1.0.0")
+    ).to.eql({
+      name: "dep",
+      version: "~1.0.0",
+      dependencies: []
+    });
+  });
+
   it("should return both dev and normal dependencies", async () => {
     nock.cleanAll();
     nock("https://registry.npmjs.org")
