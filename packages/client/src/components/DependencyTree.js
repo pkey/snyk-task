@@ -9,6 +9,11 @@ class DependencyList extends React.Component {
       treeData: this.props.treeData
     };
   }
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      treeData: nextProps.treeData
+    });
+  }
 
   render() {
     return this.state.treeData ? (
@@ -27,7 +32,7 @@ class DependencyList extends React.Component {
         </Tree>
       </div>
     ) : (
-      this.state.message
+      "Waiting..."
     );
   }
 }
