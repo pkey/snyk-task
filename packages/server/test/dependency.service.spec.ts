@@ -36,6 +36,47 @@ describe("DependencyService", () => {
     });
   });
 
+  it("should stop querying further if dependency version is git based", async () => {
+    expect(
+      await new dependencyService().getDependencies(
+        "dep",
+        "github:someone/dep.js",
+        1
+      )
+    ).to.eql({
+      name: "dep",
+      version: "github:someone/dep.js",
+      dependencies: []
+    });
+  });
+
+  it("should get latest version if dependency with provided version is not found", async () => {
+    nock.cleanAll();
+    nock("https://registry.npmjs.org")
+      .get("/dep/0.0.0")
+      .reply(404);
+    nock("https://registry.npmjs.org")
+      .get("/dep/latest")
+      .reply(200, {
+        dependencies: { dep1: "1.0.0" },
+        devDependencies: {}
+      });
+
+    expect(
+      await new dependencyService().getDependencies("dep", "0.0.0", 1)
+    ).to.eql({
+      name: "dep",
+      version: "0.0.0",
+      dependencies: [
+        {
+          name: "dep1",
+          version: "1.0.0",
+          dependencies: []
+        }
+      ]
+    });
+  });
+
   it("should return both dev and normal dependencies", async () => {
     nock.cleanAll();
     nock("https://registry.npmjs.org")

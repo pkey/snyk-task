@@ -27,6 +27,7 @@ class DependencyService {
     };
 
     if (currentDepth >= this.maxDepth) return dependency;
+    if (version.includes("git")) return dependency;
 
     const parsedVersion =
       version === "latest" ? version : this.parseVersion(version);
@@ -38,13 +39,13 @@ class DependencyService {
       );
     } catch (e) {
       switch (e.response.status) {
-        //If dependency not found based on parsed version - get the latest version of it
+        //Mostly to handle the case when semver return 0.0.0 - and this version can't be found.
         case 404:
           response = await axios.get(
             `https://registry.npmjs.org/${name}/latest`
           );
-          return dependency;
-        //If dependency is unauthorized - stop going further
+          break;
+        //Some of the dependencies in private scopes can't be accessed
         case 401:
           console.log(
             "Can't access dependency " + name + ", version: " + parsedVersion
