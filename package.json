@@ -1,6 +1,10 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+    "lerna": "lerna",
+    "start": "lerna run start"
+  },
   "devDependencies": {
     "lerna": "^3.18.4"
   }
