@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Input } from "antd";
 import "antd/dist/antd.css";
 import axios from "axios";
 import React from "react";
@@ -10,8 +10,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       //TODO: Change this later
-      packageName: "express",
-      version: "latest",
+      packageName: "",
+      version: "",
       depth: 0,
       treeData: undefined,
       loading: false
@@ -20,17 +20,44 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Button
-          type="primary"
-          onClick={this.onClick}
-          loading={this.state.loading}
-        >
-          Search
-        </Button>
+        <div class="data-input">
+          <Input
+            placeholder="Package Name"
+            onChange={this.onPackageNameChange}
+          />
+          <Input placeholder="Version" onChange={this.onVersionChange} />
+          <Input placeholder="Depth" onChange={this.onDepthChange} />
+          <Button
+            type="primary"
+            onClick={this.onClick}
+            loading={this.state.loading}
+          >
+            Search
+          </Button>
+        </div>
+
         <DependencyTree treeData={this.state.treeData} />
       </div>
     );
   }
+
+  onPackageNameChange = event => {
+    this.setState({
+      packageName: event.target.value
+    });
+  };
+
+  onDepthChange = event => {
+    this.setState({
+      depth: event.target.value
+    });
+  };
+
+  onVersionChange = event => {
+    this.setState({
+      version: event.target.value
+    });
+  };
 
   onClick = () => {
     this.setState({
