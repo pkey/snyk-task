@@ -1,15 +1,16 @@
-import { Button, Input } from "antd";
+import { Button, Input, Select } from "antd";
 import "antd/dist/antd.css";
 import axios from "axios";
 import React from "react";
 import DependencyTree from "./components/DependencyTree";
 import "./index.css";
 
+const { Option } = Select;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //TODO: Change this later
       packageName: "",
       version: "",
       depth: 0,
@@ -27,7 +28,18 @@ class App extends React.Component {
             onChange={this.onPackageNameChange}
           />
           <Input placeholder="Version" onChange={this.onVersionChange} />
-          <Input placeholder="Depth" onChange={this.onDepthChange} />
+          <Select
+            defaultValue="0"
+            style={{ width: 120 }}
+            onChange={this.onDepthChange}
+          >
+            <Option value="0">0</Option>
+            <Option value="1">1</Option>
+            <Option value="2">2</Option>
+            <Option value="3">3</Option>
+            <Option value="4">4</Option>
+            <Option value="5">5</Option>
+          </Select>
           <Button
             type="primary"
             onClick={this.onClick}
@@ -51,9 +63,9 @@ class App extends React.Component {
     });
   };
 
-  onDepthChange = event => {
+  onDepthChange = value => {
     this.setState({
-      depth: event.target.value
+      depth: value
     });
   };
 
