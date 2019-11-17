@@ -1,6 +1,13 @@
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import semver from "semver";
 import { Dependency } from "../models";
+
+//Sometimes server would give ECONNRESET or ENOTFOUND, even though dependency is there
+axiosRetry(axios, {
+  retryCondition: error =>
+    error.code === "ECONNRESET" || error.code === "ENOTFOUND"
+});
 
 class DependencyService {
   private maxDepth;
@@ -24,9 +31,29 @@ class DependencyService {
     const parsedVersion =
       version === "latest" ? version : this.parseVersion(version);
 
-    const response = await axios.get(
-      `https://registry.npmjs.org/${name}/${parsedVersion}`
-    );
+    let response;
+    try {
+      response = await axios.get(
+        `https://registry.npmjs.org/${name}/${parsedVersion}`
+      );
+    } catch (e) {
+      switch (e.response.status) {
+        //If dependency not found based on parsed version - get the latest version of it
+        case 404:
+          response = await axios.get(
+            `https://registry.npmjs.org/${name}/latest`
+          );
+          return dependency;
+        //If dependency is unauthorized - stop going further
+        case 401:
+          console.log(
+            "Can't access dependency " + name + ", version: " + parsedVersion
+          );
+          return dependency;
+        default:
+          throw e;
+      }
+    }
 
     const dependencies = {
       ...response.data.dependencies,
