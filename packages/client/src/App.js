@@ -1,26 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import "antd/dist/antd.css";
+import React from "react";
+import DependencyTree from "./components/DependencyTree";
+import "./index.css";
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      treeData: {
+        name: "dep",
+        version: "latest",
+        dependencies: [
+          {
+            name: "dep1",
+            version: "latest",
+            dependencies: [
+              {
+                name: "dep11",
+                version: "latest",
+                dependencies: []
+              },
+              {
+                name: "dep12",
+                version: "latest",
+                dependencies: []
+              }
+            ]
+          },
+          {
+            name: "dep2",
+            version: "latest",
+            dependencies: [
+              {
+                name: "dep21",
+                version: "latest",
+                dependencies: []
+              },
+              {
+                name: "dep22",
+                version: "latest",
+                dependencies: []
+              }
+            ]
+          }
+        ]
+      }
+    };
+  }
+  render() {
+    return (
+      <div className="App">
+        <DependencyTree treeData={this.state.treeData} />
+      </div>
+    );
+  }
 }
 
 export default App;

@@ -6,7 +6,7 @@ import dependencyService from "./services/dependency.service";
 const app = new Koa();
 const router = new Router();
 
-const port = 3000;
+const port = 3001;
 /*
 Params:
 
