@@ -25,17 +25,6 @@ describe("DependencyService", () => {
     });
   });
 
-  //Would be better to check what argument axios was called with. Not sure how to test this.
-  it("should parse the version before calling axios", async () => {
-    expect(
-      await new dependencyService().getDependencies("dep", "~1.0.0")
-    ).to.eql({
-      name: "dep",
-      version: "~1.0.0",
-      dependencies: []
-    });
-  });
-
   it("should stop querying further if dependency version is git based", async () => {
     expect(
       await new dependencyService().getDependencies(
@@ -206,6 +195,15 @@ describe("DependencyService", () => {
           }
         ]
       });
+    });
+  });
+
+  describe("#parseVersion", () => {
+    //Would be better to check what argument axios was called with. Not sure how to test this.
+    it("should parse the version before calling axios", async () => {
+      expect(await new dependencyService().parseVersion("~1.0.0")).to.eql(
+        "1.0.0"
+      );
     });
   });
 });
