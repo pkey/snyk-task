@@ -63,11 +63,11 @@ class DependencyService {
 
     const dependencyPromises: Promise<Dependency>[] = [];
 
-    for (let name of Object.keys(dependencies)) {
+    Object.keys(dependencies).forEach(name => {
       dependencyPromises.push(
         this.getTree(name, dependencies[name], currentDepth + 1)
       );
-    }
+    });
 
     await Promise.all(dependencyPromises).then((dependencies: any) => {
       dependency.dependencies = dependencies;
