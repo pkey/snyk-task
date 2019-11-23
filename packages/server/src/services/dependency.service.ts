@@ -26,6 +26,13 @@ class DependencyService {
       dependencies: []
     };
 
+    console.log(
+      "We start processing dependency ",
+      dependency.name,
+      " at depth ",
+      currentDepth
+    );
+
     if (currentDepth >= this.maxDepth) return dependency;
     if (version.includes("git")) return dependency;
 
@@ -34,6 +41,12 @@ class DependencyService {
 
     let response;
     try {
+      console.log(
+        "Try response with ",
+        dependency.name,
+        " at depth ",
+        currentDepth
+      );
       response = await axios.get(
         `https://registry.npmjs.org/${name}/${parsedVersion}`
       );
@@ -56,6 +69,13 @@ class DependencyService {
       }
     }
 
+    console.log(
+      "Proccessed response for ",
+      dependency.name,
+      " at depth ",
+      currentDepth
+    );
+
     const dependencies = {
       ...response.data.dependencies,
       ...response.data.devDependencies
@@ -69,9 +89,21 @@ class DependencyService {
       );
     }
 
+    console.log(
+      "Got all things tree related from ",
+      dependency.name,
+      " at depth ",
+      currentDepth
+    );
     await Promise.all(dependencyPromises).then((dependencies: any) => {
       dependency.dependencies = dependencies;
     });
+    console.log(
+      "Finished working with ",
+      dependency.name,
+      " at depth ",
+      currentDepth
+    );
 
     return dependency;
   }
