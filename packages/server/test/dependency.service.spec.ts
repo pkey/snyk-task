@@ -1,4 +1,5 @@
 let chai = require("chai");
+import "mocha";
 import nock from "nock";
 import dependencyService from "../src/services/dependency.service";
 const { expect } = chai;
