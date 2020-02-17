@@ -1,5 +1,7 @@
 # Snyk Homework Task :dog:
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/pkey/snyk-task.svg)](https://greenkeeper.io/)
+
 ## Essence
 
 Getting a dependency tree of a npm package based on version and package name
